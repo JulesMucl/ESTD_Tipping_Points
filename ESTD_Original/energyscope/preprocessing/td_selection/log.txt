@@ -1,0 +1,62 @@
+#				incremental	total
+#phase		seconds		memory		memory
+#execute	0.046875	6242952		6242952
+### td_main.run:20(925)   option ...
+#execute	0		0		6242952
+### td_main.run:21(946)   option ...
+#execute	0		0		6242952
+### td_main.run:22(969)   option ...
+#execute	0		0		6242952
+### td_main.run:25(1044)   solve ...
+#compile	0		1560		6244512
+##genmod times:
+##seq      seconds    cum. sec.    mem. inc.  name
+## 89            0            0            0  derstage
+## 93            0            0            0  sstatus
+## 107            0            0            0  DIMENSIONS
+## 108            0            0            0  DAYS
+## 109            0            0            0  Nbr_TD
+## 110            0            0            0  Ndata
+## 111      1.89062      1.89062     13175008  Distance
+## 112            0      1.89062            0  Selected_TD
+## 114            0      1.89062      4202528  Cluster_matrix
+## 116     0.015625      1.90625      3233312  allocate_1TD_per_day
+## 118      0.03125       1.9375     14759016  other_TD_null
+## 120            0       1.9375        38400  limit_number_of_TD
+## 122      0.03125      1.96875      3187200  Euclidean_distance
+#genmod		1.96875		38595464	44839976
+#merge		0		2097160		46937136
+#collect	0.03125		37953104	84890240
+
+"option presolve 10;" used, but "option presolve 2;" would suffice.
+133590 variables, all binary
+133591 constraints, all linear; 400040 nonzeros
+	366 equality constraints
+	133225 inequality constraints
+1 linear objective; 132860 nonzeros.
+
+presolve results:
+	variables omitted:	0
+	constraints omitted:	0
+	ranges relaxed:		133225
+	bounds improved:	0
+	nba cycles:		1
+	bound row scans:	133591
+	row-scan updates:	0
+#presolve	0.109375	30571568	115461808
+#output		0.296875	4194312		119656120
+#Total		2.45312
+CPLEX 22.1.2:   tech:mipdisplay = 5
+  tech:mipinterval = 1000
+  mip:gap = 1e-06
+CPLEX 22.1.2: optimal solution; objective 7.369768048e-06
+16 simplex iterations
+#execute	0.03125		2097160		121753280
+### td_main.run:27(1052)   option ...
+### td_main.run:28(1080)   option ...
+solve_result = solved
+
+solve_result_num = 0
+
+_solve_elapsed_time = 9.781
+

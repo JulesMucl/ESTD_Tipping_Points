@@ -1,0 +1,22 @@
+# Ignorer les environnements virtuels
+.venv/
+venv/
+
+# Fichiers temporaires Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Données de logs ou de sortie
+*.log
+*.tmp
+output/
+__outputs__/
+
+# Fichiers spécifiques à VSCode
+.vscode/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
