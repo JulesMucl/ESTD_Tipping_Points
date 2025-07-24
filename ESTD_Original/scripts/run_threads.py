@@ -7,8 +7,8 @@ import energyscope as es
 # === PARAMÈTRES ===
 gwp_up = 1
 gwp_down = 0.0
-N_RUNS = 30
-STEP = 0.02
+N_RUNS = 10
+STEP = 0.05
 
 # === CHEMINS ===
 root = Path(__file__).resolve().parent.parent
@@ -34,7 +34,7 @@ def run_scenario(run_idx):
     new_gwp = round(run_idx * STEP, 3)
     new_gwp += gwp_down
     name_value = new_gwp
-    scenario_name = f"H2_RE_gwp_{name_value:.3f}"
+    scenario_name = f"BIOETHANOL_gwp_{name_value:.3f}"
     print(f"[▶] {scenario_name}...")
 
     scenario_data_dir = root / "Data" / scenario_name
@@ -50,7 +50,7 @@ def run_scenario(run_idx):
         scenario_resources_fn = scenario_data_dir / "Resources.csv"
         df = pd.read_csv(scenario_resources_fn, sep=';', skiprows=2)
         df.columns = df.columns.str.strip()
-        targets = ['H2_RE'] #['METHANOL_RE', 'AMMONIA_RE', 'H2_RE', 'GAS_RE', 'BIOETHANOL', 'BIODIESEL']
+        targets = ['BIOETHANOL'] #['METHANOL_RE', 'AMMONIA_RE', 'H2_RE', 'GAS_RE', 'BIOETHANOL', 'BIODIESEL']
         df.loc[df['parameter name'].isin(targets), 'gwp_op'] = new_gwp
         with open(scenario_resources_fn, 'w', encoding='utf-8') as f:
             f.write(";;;Availability;Direct and indirect emissions;Price;\n")
