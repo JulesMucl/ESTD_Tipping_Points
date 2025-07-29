@@ -13,7 +13,7 @@ root = Path(f"C:/Users/julem/EnergyScope_Original/ESTD_Original/case_studies/ONL
 save_path = Path(f"C:/Users/julem/Dropbox/EPL/TFE/TFE_textes/Images/TIPPING_POINT/{root_prefix}.png")
 
 cost = True  # 🔁 Activer ou non l'extraction du coût total
-use_plotly = False  # 🔁 Affichage interactif ou statique
+use_plotly = True  # 🔁 Affichage interactif ou statique
 
 
 

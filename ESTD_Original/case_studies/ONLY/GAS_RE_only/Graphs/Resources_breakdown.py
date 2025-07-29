@@ -5,11 +5,20 @@ from pathlib import Path
 
 
 # === 📥 PARAMÈTRES ===
-scenario_prefix = "H2_RE_gwp_"
-root_prefix = "GAS_RE_only"
-scenarios = [f"{scenario_prefix}{i/100:.3f}" for i in range(0, 54, 2)]
 
-root = Path(f"C:/Users/julem/EnergyScope_Original/ESTD_Original/case_studies/ONLY/{root_prefix}")
+root_prefix = "GAS_RE_only"
+
+# === 📁 PATHS ===
+ZOOM = True  # True pour le zoom, False pour le normal
+if ZOOM:
+    scenario_prefix = "GAS_RE_gwp_"
+    scenarios = [f"{scenario_prefix}{i/1000:.3f}" for i in range(20, 36, 2)]
+    root = Path(f"C:/Users/julem/EnergyScope_Original/ESTD_Original/case_studies/ONLY/{root_prefix}/ZOOM")
+else:
+    scenario_prefix = "H2_RE_gwp_"
+    scenarios = [f"{scenario_prefix}{i/100:.3f}" for i in range(0, 54, 2)]
+    root = Path(f"C:/Users/julem/EnergyScope_Original/ESTD_Original/case_studies/ONLY/{root_prefix}")
+
 save_path = Path(f"C:/Users/julem/Dropbox/EPL/TFE/TFE_textes/Images/TIPPING_POINT/{root_prefix}.png")
 
 cost = True  # 🔁 Activer ou non l'extraction du coût total
