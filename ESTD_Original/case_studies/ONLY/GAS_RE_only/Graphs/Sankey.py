@@ -10,16 +10,16 @@ root_prefix = "GAS_RE_only"               # nom du dossier racine
 
 
 
-ZOOM = False                     # True pour le zoom, False pour le normal
+ZOOM = True                     # True pour le zoom, False pour le normal
 
 # === 📁 PATHS ===
 if ZOOM:
-    scenario_name = "GAS_RE_gwp_0.022"         # nom du scénario
+    scenario_name = "GAS_RE_gwp_0.026"         # nom du scénario
 
     base_path = Path(f"C:/Users/julem/EnergyScope_Original/ESTD_Original/case_studies/ONLY/{root_prefix}/ZOOM/{scenario_name}/output/sankey")  # ZOOM
 else:
 
-    scenario_name = "H2_RE_gwp_0.040"         # nom du scénario
+    scenario_name = "H2_RE_gwp_0.026"         # nom du scénario
 
     base_path = Path(f"C:/Users/julem/EnergyScope_Original/ESTD_Original/case_studies/ONLY/{root_prefix}/{scenario_name}/output/sankey")  # NORMAL
 

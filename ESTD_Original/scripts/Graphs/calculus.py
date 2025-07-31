@@ -81,13 +81,32 @@ def techno(name, input, output,ressource):
 
     c_op = res_row["c_op"].values[0]
 
-    return cost_techno(cp, tau, c_inv, c_maint, ratio, c_op) #, ratio, lifetime, c_inv, c_maint, c_op, i_rate, tau, cp
+    return cost_techno(cp, tau, c_inv, c_maint, ratio, c_op), ratio #, ratio, lifetime, c_inv, c_maint, c_op, i_rate, tau, cp
 
 if __name__ == "__main__":
-    cost = techno("CCGT_AMMONIA", input="AMMONIA", output="ELECTRICITY", ressource="AMMONIA_RE")
+    
+    cost, ratio = techno("IND_COGEN_GAS", input="GAS", output="HEAT_HIGH_T", ressource="GAS")
 
-    print(cost)
-    print(f"Coût spécifique de CCGT_AMMONIA : {cost:.4f} M€/GWh")
+
+    print(f"Ratio Ressources/Output : {ratio:.4f} GWh/GWh")
+    print(f"Coût spécifique de la techno analysée : {cost:.4f} M€/GWh")
+
+
+
+
+    #ELECTRICITY
+
+    # techno("CCGT_AMMONIA", input="AMMONIA", output="ELECTRICITY", ressource="AMMONIA_RE") = 0.1484 M€/GWh     / ratio 1.952
+    # techno("IND_COGEN_GAS", input="GAS", output="ELECTRICITY", ressource="GAS_RE") = 0.2568 M€/GWh        / ratio = 2.2644
+    # techno("IND_COGEN_GAS", input="GAS", output="ELECTRICITY", ressource="GAS") = 0.14135 M€/GWh      / ratio = 2.2644
+
+
+    #HEAT HIGH T
+
+    # techno("IND_COGEN_GAS", input="GAS", output="HEAT_HIGH_T", ressource="GAS_RE") = 0.2465 M€/GWh        / ratio = 2.1739
+    # techno("IND_COGEN_GAS", input="GAS", output="HEAT_HIGH_T", ressource="GAS")   = 0.1357 M€/GWh     / ratio = 2.1739
+    # techno("IND_BOILER_WOOD", input="WOOD", output="HEAT_HIGH_T", ressource="WOOD") = 0.0423 M€/GWh     / ratio = 1.1568
+    
 
 
 

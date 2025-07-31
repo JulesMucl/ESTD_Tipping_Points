@@ -5,9 +5,21 @@ import pandas as pd
 import shutil
 import energyscope as es
 
+
+
+""""
+1. Paramètres gwp_range et gwp_ratio
+2. df.loc[df['parameter name'] == 'H2_RE', 'gwp_op'] = gwp_denum
+3. Boucles for dans main
+4. Name
+"""
+
 # === PARAMÈTRES GWP ===
-gwp_range_main = [round(i * 0.015, 3) for i in range(0, 20)]  # GAS_RE & AMMONIA_RE: 0 → 0.4
-gwp_range_h2 = [round(i * 0.015, 3) for i in range(0, 20)]     # H2_RE: 0 → 0.4
+gwp_range_main = 1#range(0.7,0.9,0.05) #"[round(0.7 + i * 0.02, 3) for i in range(1, 6)] 
+
+
+gwp_ratio_denom = [round(i * 0.01, 3) for i in range(40,60,5)] #AMMONIA_RE
+gwp_ratio_num = [round(i * 0.05, 3) for i in range(2, 5)]   #H2_RE 
 
 # === CHEMINS ===
 root = Path(__file__).resolve().parent.parent
@@ -16,16 +28,14 @@ td_base_case = root / "case_studies" / "base_TD"
 config_path = root / "scripts" / "config_ref.yaml"
 
 # === FONCTION POUR UN SCÉNARIO AVEC NOUVEAU GWP_OP ===
-def run_scenario(gwp_main, gwp_h2):
-    scenario_name = f"GAS&AMMONIA_vs_H2_gas&ammo_{gwp_main:.3f}_h2_{gwp_h2:.3f}"
+def run_scenario(gwp_main, gwp_num, gwp_denum):
+    NAME = "H2_RE_vs_AMMONIA_RE_RATIO_8_TEST"
+
+    scenario_name = f"{NAME}__h2_{gwp_num:.3f}_/_ammonia_{gwp_denum:.3f}"
     print(f"[▶] {scenario_name}...")
 
-
-
-
-
     scenario_data_dir = root / "Data" / scenario_name
-    scenario_case_dir = root / "case_studies" / "RATIO" / "Gas&Ammonia_vs_H2" /scenario_name
+    scenario_case_dir = root / "case_studies" / "RATIO" / NAME /scenario_name
     scenario_data_dir.mkdir(parents=True, exist_ok=True)
     scenario_case_dir.mkdir(parents=True, exist_ok=True)
 
@@ -38,9 +48,14 @@ def run_scenario(gwp_main, gwp_h2):
         df = pd.read_csv(scenario_resources_fn, sep=';', skiprows=2)
         df.columns = df.columns.str.strip()
 
-        df.loc[df['parameter name'] == 'GAS_RE', 'gwp_op'] = gwp_main
-        df.loc[df['parameter name'] == 'AMMONIA_RE', 'gwp_op'] = gwp_main
-        df.loc[df['parameter name'] == 'H2_RE', 'gwp_op'] = gwp_h2
+        df.loc[df['parameter name'] == 'H2_RE', 'gwp_op'] = gwp_num   #gwp_main
+        # df.loc[df['parameter name'] == 'METHANOL_RE', 'gwp_op'] = gwp_main
+        # df.loc[df['parameter name'] == 'BIODIESEL', 'gwp_op'] = gwp_main
+        # df.loc[df['parameter name'] == 'BIOETHANOL', 'gwp_op'] = gwp_main
+
+        df.loc[df['parameter name'] == 'AMMONIA_RE', 'gwp_op'] = gwp_denum
+        # df.loc[df['parameter name'] == 'GAS_RE', 'gwp_op'] = gwp_denum
+        
 
         with open(scenario_resources_fn, 'w', encoding='utf-8') as f:
             f.write(";;;Availability;Direct and indirect emissions;Price;\n")
@@ -49,6 +64,13 @@ def run_scenario(gwp_main, gwp_h2):
 
         # 3. Copier les TD
         shutil.copy(td_base_case / "ESTD_12TD.dat", scenario_case_dir / "ESTD_12TD.dat")
+        
+        # 5. Nettoyage output
+        output_dir = scenario_case_dir / "output"
+        if output_dir.exists():
+            shutil.rmtree(output_dir)
+        output_dir.mkdir()
+
 
         # 4. Charger config
         config = es.load_config(config_fn=str(config_path))
@@ -60,11 +82,6 @@ def run_scenario(gwp_main, gwp_h2):
         config.setdefault("ampl_options", {})
         config["ampl_options"]["log_file"] = str((scenario_case_dir / "output" / "log.txt").as_posix())
 
-        # 5. Nettoyage output
-        output_dir = scenario_case_dir / "output"
-        if output_dir.exists():
-            shutil.rmtree(output_dir)
-        output_dir.mkdir()
 
         for file in scenario_case_dir.glob("*.run"):
             file.unlink()
@@ -80,10 +97,10 @@ def run_scenario(gwp_main, gwp_h2):
         es.run_es(config)
 
         # 8. Copie des résultats
-        output_dst = root / f"RESULTS_gas_{gwp_main:.3f}_h2_{gwp_h2:.3f}"
-        output_dst.mkdir(exist_ok=True)
-        for file in output_dir.glob("*.txt"):
-            shutil.copy(file, output_dst / file.name)
+        # output_dst = root / f"RESULTS__{NAME}"
+        # output_dst.mkdir(exist_ok=True)
+        # for file in output_dir.glob("*.txt"):
+        #     shutil.copy(file, output_dst / file.name)
 
         print(f"[✔] Terminé pour {scenario_name}")
 
@@ -94,9 +111,14 @@ def run_scenario(gwp_main, gwp_h2):
 if __name__ == '__main__':
     # generate_typical_days()  # Décommenter si nécessaire
 
-    for gwp_main in gwp_range_main:
-        for gwp_h2 in gwp_range_h2:
-            run_scenario(gwp_main, gwp_h2)
+    #for gwp_main in gwp_range_main:
+    for gwp_denum in gwp_ratio_denom:
+
+        #for gwp_num in gwp_ratio_num:
+
+        gwp_main = 0
+
+        run_scenario(gwp_main=0, gwp_num=0.1, gwp_denum=gwp_denum)
 
     print("[🎯] Tous les scénarios sont terminés.")
 
