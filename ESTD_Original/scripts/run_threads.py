@@ -8,20 +8,6 @@ import energyscope as es
 
 
 
-""""
-1. Paramètres gwp_range et gwp_ratio
-2. df.loc[df['parameter name'] == 'H2_RE', 'gwp_op'] = gwp_denum
-3. Boucles for dans main
-4. Name
-"""
-
-# === PARAMÈTRES GWP ===
-# gwp_range_main = 1#range(0.7,0.9,0.05) #"[round(0.7 + i * 0.02, 3) for i in range(1, 6)] 
-
-
-# gwp_ratio_denom = [round(i * 0.01, 3) for i in range(40,60,5)] #AMMONIA_RE
-# gwp_ratio_num = [round(i * 0.05, 3) for i in range(2, 5)]   #H2_RE 
-
 # === CHEMINS ===
 root = Path(__file__).resolve().parent.parent
 base_data_dir = root / "Data" / "2050"
@@ -33,15 +19,15 @@ config = {
 
     'NUCLEAR': True,  # Utiliser le nucléaire dans le scénario
 
-    'NAME': "GAS_RE_ONLY_NUCLEAR",  # Nom du scénario
+    'NAME': "BIOETHANOL_RE_ONLY_NUCLEAR",  # Nom du scénario
 
     'ONLY': True,
 
-    "gwp_range_num": [round(i * 0.05, 3) for i in range(0, 11,1)],    
+    "gwp_range_num": [round(i * 0.05, 3) for i in range(0, 6,2)],    
 
-    "gwp_range_denum": 0,#[round(i * 0.01, 3) for i in range(40,60,5)],
+    "gwp_range_denum": 0, #[round(i * 0.01, 3) for i in range(40,60,5)],
 
-    "gwp_range_other_fuels": 0,#[round(i * 0.01, 3) for i in range(70, 90, 5)],
+    "gwp_range_other_fuels": 0, #[round(i * 0.01, 3) for i in range(70, 90, 5)],
 
 
 
@@ -80,14 +66,15 @@ def run_scenario(gwp_other_fuel, gwp_num, gwp_denum,config=config):
         scenario_resources_fn = scenario_data_dir / "Resources.csv"
         df = pd.read_csv(scenario_resources_fn, sep=';', skiprows=2)
         df.columns = df.columns.str.strip()
+        #---------------------------------------------------------------------------------------------------------00000000000000000000
 
-        df.loc[df['parameter name'] == 'H2_RE', 'gwp_op']       = gwp_other_fuel 
+        df.loc[df['parameter name'] == 'H2_RE', 'gwp_op']       = gwp_other_fuel
         df.loc[df['parameter name'] == 'METHANOL_RE', 'gwp_op'] = gwp_other_fuel
         df.loc[df['parameter name'] == 'BIODIESEL', 'gwp_op']   = gwp_other_fuel
-        df.loc[df['parameter name'] == 'BIOETHANOL', 'gwp_op']  = gwp_other_fuel
+        df.loc[df['parameter name'] == 'BIOETHANOL', 'gwp_op']  = gwp_num 
         df.loc[df['parameter name'] == 'AMMONIA_RE', 'gwp_op']  = gwp_other_fuel
-        df.loc[df['parameter name'] == 'GAS_RE', 'gwp_op']      = gwp_num 
-        
+        df.loc[df['parameter name'] == 'GAS_RE', 'gwp_op']      = gwp_other_fuel
+        #---------------------------------------------------------------------------------------------------------00000000000000000000
 
         with open(scenario_resources_fn, 'w', encoding='utf-8') as f:
             f.write(";;;Availability;Direct and indirect emissions;Price;\n")
@@ -164,7 +151,14 @@ if __name__ == '__main__':
                 for gwp_num in config['gwp_range_num']:
                     
                     run_scenario(gwp_other_fuel=gwp_other_fuel, gwp_num=gwp_num, gwp_denum=gwp_denum)
+ 
+
     print("[🎯] Tous les scénarios sont terminés.")
+    print("🎉🎉🎉 Let's go! You're amazing! 😄 🚀 😁 🎯")
+    print("😄 😁 😊 🤩 😎 🥳 😃 😸 🎉 💫 🌟 ✨ 🙌 ❤️")
+    print("🎉🎉🎉")
+
+
 
 
 

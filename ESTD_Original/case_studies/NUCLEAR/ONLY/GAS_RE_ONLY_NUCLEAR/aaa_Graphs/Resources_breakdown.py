@@ -5,6 +5,10 @@ from pathlib import Path
 import numpy as np
 import csv
 
+
+#------------------------------------------------------- GAS_RE_ONLY_NUCLEAR ---------------------------------------------------
+
+
 # Configuration centralisée
 config = {
 
@@ -15,9 +19,10 @@ config = {
         "CO2_INDUSTRY",
         "CO2_CAPTURED"
     ],
-    "selection_technos": ["BOAT_FREIGHT_DIESEL","BOAT_FREIGHT_METHANOL"],  # Technologies à sélectionner pour les graphiques
-    "selection_resources": ["AMMONIA_RE", "H2_RE", "GAS_RE","GAS","METHANOL_RE","BIODIESEL","BIOETHANOL"],  # Ressources à sélectionner pour les graphiques
     
+    "selection_resources": ["AMMONIA_RE", "H2_RE", "GAS_RE","GAS","METHANOL_RE","BIODIESEL","BIOETHANOL"],  # Ressources à sélectionner pour les graphiques
+
+    "selection_technos": ["CCGT_AMMONIA", "IND_COGEN_GAS","CCGT","HABER_BOSCH"], # Technologies à sélectionner pour les graphiques
     # Paramètres de base pour les chemins et préférences
     "root_prefix": "GAS_RE_ONLY_NUCLEAR",  # Préfixe du dossier racine
     "save_path": Path("C:/Users/julem/Dropbox/EPL/TFE/TFE_textes/Images/TIPPING_POINT/"),
@@ -351,3 +356,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#------------------------------------------------------- GAS_RE_ONLY_NUCLEAR ---------------------------------------------------
