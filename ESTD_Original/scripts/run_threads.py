@@ -1,4 +1,5 @@
 
+
 # -*- coding: utf-8 -*-
 from pathlib import Path
 import pandas as pd
@@ -15,11 +16,11 @@ import energyscope as es
 """
 
 # === PARAMÈTRES GWP ===
-gwp_range_main = 1#range(0.7,0.9,0.05) #"[round(0.7 + i * 0.02, 3) for i in range(1, 6)] 
+# gwp_range_main = 1#range(0.7,0.9,0.05) #"[round(0.7 + i * 0.02, 3) for i in range(1, 6)] 
 
 
-gwp_ratio_denom = [round(i * 0.01, 3) for i in range(40,60,5)] #AMMONIA_RE
-gwp_ratio_num = [round(i * 0.05, 3) for i in range(2, 5)]   #H2_RE 
+# gwp_ratio_denom = [round(i * 0.01, 3) for i in range(40,60,5)] #AMMONIA_RE
+# gwp_ratio_num = [round(i * 0.05, 3) for i in range(2, 5)]   #H2_RE 
 
 # === CHEMINS ===
 root = Path(__file__).resolve().parent.parent
@@ -27,15 +28,47 @@ base_data_dir = root / "Data" / "2050"
 td_base_case = root / "case_studies" / "base_TD"
 config_path = root / "scripts" / "config_ref.yaml"
 
-# === FONCTION POUR UN SCÉNARIO AVEC NOUVEAU GWP_OP ===
-def run_scenario(gwp_main, gwp_num, gwp_denum):
-    NAME = "H2_RE_vs_AMMONIA_RE_RATIO_8_TEST"
 
-    scenario_name = f"{NAME}__h2_{gwp_num:.3f}_/_ammonia_{gwp_denum:.3f}"
+config = {
+
+    'NUCLEAR': True,  # Utiliser le nucléaire dans le scénario
+
+    'NAME': "GAS_RE_ONLY_NUCLEAR",  # Nom du scénario
+
+    'ONLY': True,
+
+    "gwp_range_num": [round(i * 0.05, 3) for i in range(0, 11,1)],    
+
+    "gwp_range_denum": 0,#[round(i * 0.01, 3) for i in range(40,60,5)],
+
+    "gwp_range_other_fuels": 0,#[round(i * 0.01, 3) for i in range(70, 90, 5)],
+
+
+
+}
+
+
+
+# === FONCTION POUR UN SCÉNARIO AVEC NOUVEAU GWP_OP ===
+def run_scenario(gwp_other_fuel, gwp_num, gwp_denum,config=config):
+    NAME = config['NAME']
+    if config['ONLY']:
+        scenario_name = f"{NAME}_{gwp_num:.3f}"
+
+    else:
+        scenario_name = f"{NAME}__{gwp_num:.3f}_vs_{gwp_denum:.3f}"
+
     print(f"[▶] {scenario_name}...")
 
     scenario_data_dir = root / "Data" / scenario_name
-    scenario_case_dir = root / "case_studies" / "RATIO" / NAME /scenario_name
+    if config['NUCLEAR']:
+        if config['ONLY']:
+            scenario_case_dir = root / "case_studies" / "NUCLEAR" / "ONLY" /  NAME /"log" /scenario_name
+        else:
+            scenario_case_dir = root / "case_studies" / "NUCLEAR" / "RATIO" /  NAME /"log" / scenario_name
+
+    else:
+        scenario_case_dir = root / "case_studies" / "NON_NUCLEAR" /  NAME /"log" /scenario_name
     scenario_data_dir.mkdir(parents=True, exist_ok=True)
     scenario_case_dir.mkdir(parents=True, exist_ok=True)
 
@@ -48,13 +81,12 @@ def run_scenario(gwp_main, gwp_num, gwp_denum):
         df = pd.read_csv(scenario_resources_fn, sep=';', skiprows=2)
         df.columns = df.columns.str.strip()
 
-        df.loc[df['parameter name'] == 'H2_RE', 'gwp_op'] = gwp_num   #gwp_main
-        # df.loc[df['parameter name'] == 'METHANOL_RE', 'gwp_op'] = gwp_main
-        # df.loc[df['parameter name'] == 'BIODIESEL', 'gwp_op'] = gwp_main
-        # df.loc[df['parameter name'] == 'BIOETHANOL', 'gwp_op'] = gwp_main
-
-        df.loc[df['parameter name'] == 'AMMONIA_RE', 'gwp_op'] = gwp_denum
-        # df.loc[df['parameter name'] == 'GAS_RE', 'gwp_op'] = gwp_denum
+        df.loc[df['parameter name'] == 'H2_RE', 'gwp_op']       = gwp_other_fuel 
+        df.loc[df['parameter name'] == 'METHANOL_RE', 'gwp_op'] = gwp_other_fuel
+        df.loc[df['parameter name'] == 'BIODIESEL', 'gwp_op']   = gwp_other_fuel
+        df.loc[df['parameter name'] == 'BIOETHANOL', 'gwp_op']  = gwp_other_fuel
+        df.loc[df['parameter name'] == 'AMMONIA_RE', 'gwp_op']  = gwp_other_fuel
+        df.loc[df['parameter name'] == 'GAS_RE', 'gwp_op']      = gwp_num 
         
 
         with open(scenario_resources_fn, 'w', encoding='utf-8') as f:
@@ -110,157 +142,30 @@ def run_scenario(gwp_main, gwp_num, gwp_denum):
 # === SCRIPT PRINCIPAL ===
 if __name__ == '__main__':
     # generate_typical_days()  # Décommenter si nécessaire
+    if config['gwp_range_num'] == 0:
+        print("[❌] Aucune valeur dans gwp_range_num, veuillez vérifier la configuration.")
+        
+    
+    if config['gwp_range_other_fuels'] == 0:
 
-    #for gwp_main in gwp_range_main:
-    for gwp_denum in gwp_ratio_denom:
+        if config['gwp_range_denum'] == 0:
+            for gwp_num in config['gwp_range_num']:
+                run_scenario(gwp_other_fuel=0, gwp_num=gwp_num, gwp_denum=0)
 
-        #for gwp_num in gwp_ratio_num:
+        else:
+            for gwp_denum in config['gwp_range_denum']:
+                for gwp_num in config['gwp_range_num']:
+                    run_scenario(gwp_other_fuel=0, gwp_num=gwp_num, gwp_denum=gwp_denum)
 
-        gwp_main = 0
 
-        run_scenario(gwp_main=0, gwp_num=0.1, gwp_denum=gwp_denum)
-
+    else:
+        for gwp_other_fuel in config['gwp_range_other_fuels']:
+            for gwp_denum in config['gwp_range_denum']:
+                for gwp_num in config['gwp_range_num']:
+                    
+                    run_scenario(gwp_other_fuel=gwp_other_fuel, gwp_num=gwp_num, gwp_denum=gwp_denum)
     print("[🎯] Tous les scénarios sont terminés.")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # -*- coding: utf-8 -*-
-# from pathlib import Path
-# import pandas as pd
-# import shutil
-# import energyscope as es
-
-# # === PARAMÈTRES ===
-# gwp_up = 1
-# gwp_down = 0
-# N_RUNS = 15
-# STEP = 0.002
-
-# # === CHEMINS ===
-# root = Path(__file__).resolve().parent.parent
-# base_data_dir = root / "Data" / "2050"
-# td_base_case = root / "case_studies" / "base_TD"
-# config_path = root / "scripts" / "config_ref.yaml"
-
-# # === FONCTION POUR CONSTRUIRE LES TD UNE FOIS ===
-# def generate_typical_days():
-#     print("[⏳] Construction des TD...")
-#     config = es.load_config(config_fn=str(config_path))
-#     config["Working_directory"] = str(td_base_case)
-#     config["case_study"] = "base_TD"
-#     config["print_data"] = True
-#     config["analysis_only"] = False
-#     es.import_data(config)
-#     es.build_td_of_days(config)
-#     es.print_data(config)
-#     print("[✅] TD générés.")
-
-# # === FONCTION POUR UN SCÉNARIO AVEC NOUVEAU gwp_op ===
-# def run_scenario(run_idx):
-#     new_gwp = round(run_idx * STEP, 3)
-#     new_gwp += gwp_down
-#     name_value = new_gwp
-#     scenario_name = f"GAS_vs_Ammonia_3_gwp_{name_value:.3f}"
-#     print(f"[▶] {scenario_name}...")
-
-#     scenario_data_dir = root / "Data" / scenario_name
-#     scenario_case_dir = root / "case_studies" / scenario_name
-#     scenario_data_dir.mkdir(parents=True, exist_ok=True)
-#     scenario_case_dir.mkdir(parents=True, exist_ok=True)
-
-#     try:
-#         # 1. Copier les données de base
-#         shutil.copytree(base_data_dir, scenario_data_dir, dirs_exist_ok=True)
-
-#         # 2. Modifier les valeurs de gwp_op dans Resources.csv
-#         scenario_resources_fn = scenario_data_dir / "Resources.csv"
-#         df = pd.read_csv(scenario_resources_fn, sep=';', skiprows=2)
-#         df.columns = df.columns.str.strip()
-#         targets = ['AMMONIA_RE'] #['METHANOL_RE', 'AMMONIA_RE', 'H2_RE', 'GAS_RE', 'BIOETHANOL', 'BIODIESEL']
-#         df.loc[df['parameter name'].isin(targets), 'gwp_op'] = new_gwp
-#         targets_fixed = ['GAS_RE'] #['METHANOL_RE', 'AMMONIA_RE', 'H2_RE', 'GAS_RE', 'BIOETHANOL', 'BIODIESEL']
-#         df.loc[df['parameter name'].isin(targets_fixed), 'gwp_op'] = 0.075
-#         with open(scenario_resources_fn, 'w', encoding='utf-8') as f:
-#             f.write(";;;Availability;Direct and indirect emissions;Price;\n")
-#             f.write(";;units;[GWh/y];[ktCO2-eq./GWh];[Meuro/GWh];\n")
-#             df.to_csv(f, sep=';', index=False)
-
-#         # 3. Copier le fichier de TD
-#         shutil.copy(td_base_case / "ESTD_12TD.dat", scenario_case_dir / "ESTD_12TD.dat")
-
-#         # 4. Charger la configuration
-#         config = es.load_config(config_fn=str(config_path))
-#         config["case_study"] = scenario_name
-#         config["Working_directory"] = str(scenario_case_dir)
-#         config["data_dir"] = Path(scenario_data_dir)
-#         config["print_data"] = True
-
-#         # 🛠 Ajouter log_file explicitement dans ampl_options
-#         config.setdefault("ampl_options", {})
-#         config["ampl_options"]["log_file"] = str((scenario_case_dir / "output" / "log.txt").as_posix())
-
-#         # 5. Nettoyage et création du dossier output
-#         output_dir = scenario_case_dir / "output"
-#         if output_dir.exists():
-#             shutil.rmtree(output_dir)
-#         output_dir.mkdir()
-
-#         for file in scenario_case_dir.glob("*.run"):
-#             file.unlink()
-#         dat_file = scenario_case_dir / "ESTD_data.dat"
-#         if dat_file.exists():
-#             dat_file.unlink()
-
-#         # 6. Importer les données, générer les .dat/.run
-#         es.import_data(config)
-#         es.print_data(config)
-
-#         # 7. Lancer EnergyScope
-#         es.run_es(config)
-
-#         # 8. Sauvegarde des résultats
-#         output_dst = root / f"RESULTS_gwp_{name_value:.3f}"
-#         output_dst.mkdir(exist_ok=True)
-#         for file in output_dir.glob("*.txt"):
-#             shutil.copy(file, output_dst / file.name)
-
-#         print(f"[✔] Terminé pour {scenario_name}")
-
-#     except Exception as e:
-#         print(f"[❌] Échec pour {scenario_name} → {e}")
-
-# # === SCRIPT PRINCIPAL ===
-# if __name__ == '__main__':
-#     # generate_typical_days()
-#     for i in range(N_RUNS):
-#         run_scenario(i)
-#     print("[🎯] Tous les scénarios sont terminés.")
+# === FIN DU SCRIPT ===
