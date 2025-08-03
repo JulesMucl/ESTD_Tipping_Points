@@ -25,7 +25,7 @@ config = {
     "selection_technos": ["CCGT_AMMONIA", "IND_COGEN_GAS","SYN_METHANOLATION","INDUSTRY_CCS","IND_BOILER_WOOD","BIOMASS_TO_METHANOL"], # Technologies à sélectionner pour les graphiques
     # Paramètres de base pour les chemins et préférences
     "root_prefix": "METHANOL_RE_ONLY_NUCLEAR",  # Préfixe du dossier racine
-    "save_path": Path("C:/Users/julem/Dropbox/EPL/TFE/TFE_textes/Images/TIPPING_POINT/"),
+    "save_path": Path("C:/Users/julem/Dropbox/EPL/TFE/TFE_textes/Images/TIPPING_POINT/NUCLEAR/METHANOL_RE_ONLY_NUCLEAR/"),
     "cost_enabled": True,
     "use_plotly": False,
     

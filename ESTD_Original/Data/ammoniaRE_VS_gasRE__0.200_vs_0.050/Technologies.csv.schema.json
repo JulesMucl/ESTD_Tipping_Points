@@ -1,0 +1,77 @@
+{
+  "fields": [
+    {
+      "name": "Category",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "Subcategory",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "Technologies name",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "Technologies param",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "c_inv",
+      "type": "number",
+      "format": "default"
+    },
+    {
+      "name": "c_maint",
+      "type": "number",
+      "format": "default"
+    },
+    {
+      "name": "gwp_constr",
+      "type": "number",
+      "format": "default"
+    },
+    {
+      "name": "lifetime",
+      "type": "integer",
+      "format": "default"
+    },
+    {
+      "name": "c_p",
+      "type": "number",
+      "format": "default"
+    },
+    {
+      "name": "fmin_perc",
+      "type": "integer",
+      "format": "default"
+    },
+    {
+      "name": "fmax_perc",
+      "type": "integer",
+      "format": "default"
+    },
+    {
+      "name": "f_min",
+      "type": "integer",
+      "format": "default"
+    },
+    {
+      "name": "f_max",
+      "type": "number",
+      "format": "default"
+    },
+    {
+      "name": "Comment",
+      "type": "string",
+      "format": "default"
+    }
+  ],
+  "missingValues": [
+    ""
+  ]
+}

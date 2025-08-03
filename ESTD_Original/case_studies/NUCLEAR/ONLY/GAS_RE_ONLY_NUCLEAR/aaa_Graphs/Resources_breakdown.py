@@ -25,7 +25,8 @@ config = {
     "selection_technos": ["CCGT_AMMONIA", "IND_COGEN_GAS","CCGT","HABER_BOSCH"], # Technologies à sélectionner pour les graphiques
     # Paramètres de base pour les chemins et préférences
     "root_prefix": "GAS_RE_ONLY_NUCLEAR",  # Préfixe du dossier racine
-    "save_path": Path("C:/Users/julem/Dropbox/EPL/TFE/TFE_textes/Images/TIPPING_POINT/"),
+
+    "save_path": Path("C:/Users/julem/Dropbox/EPL/TFE/TFE_textes/Images/TIPPING_POINT/NUCLEAR/GAS_RE_ONLY_NUCLEAR/"),  # Chemin de sauvegarde des graphiques
     "cost_enabled": True,
     "use_plotly": False,
     

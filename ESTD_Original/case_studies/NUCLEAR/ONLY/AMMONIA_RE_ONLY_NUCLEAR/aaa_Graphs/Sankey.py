@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 # === 📥 PARAMÈTRES À MODIFIER ===
 root_prefix = "AMMONIA_RE_ONLY_NUCLEAR"               # nom du dossier racine
-scenario_name = "AMMONIA_RE_ONLY_NUCLEAR_0.000"        #" nom du scénario
+scenario_name = "AMMONIA_RE_ONLY_NUCLEAR_0.400"        #" nom du scénario
 
 
 

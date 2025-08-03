@@ -1,6 +1,14 @@
 from pathlib import Path
 import pandas as pd
 
+
+
+#   Levelised cost of EUD
+
+
+
+
+
 # === Chemins des fichiers ===
 Technologies_root = Path("C:/Users/julem/EnergyScope_Original/ESTD_Original/Data/2050/Technologies_jules.csv")
 Resources_root = Path("C:/Users/julem/EnergyScope_Original/ESTD_Original/Data/2050/Resources_jules.csv")
